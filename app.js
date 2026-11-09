@@ -45,7 +45,6 @@ let tempoParada = 0;
 let posicoesRastro = [];
 let bolaAtual = null;
 
-// Único ponto que escolhe entre o módulo de física real e a demonstração.
 async function selecionarMotor() {
   try {
     const fisica = await import("./fisica.js");
@@ -59,39 +58,13 @@ async function selecionarMotor() {
     estadoMotor.textContent = "Física real carregada";
     estadoMotor.dataset.modo = "real";
   } catch (erro) {
-    motor = fisicaDemonstracao;
-    const incompatibilidade = erro instanceof Error && erro.message.includes("precisa exportar");
-    estadoMotor.textContent = incompatibilidade
-      ? "Modo demonstração · integração incompatível: " + erro.message
-      : "Modo demonstração · fisica.js ausente ou não carregou";
-    estadoMotor.dataset.modo = "demo";
+    const texto = "Não foi possível carregar fisica.js: " + erro.message;
+    estadoMotor.textContent = texto;
+    estadoMotor.dataset.modo = "erro";
+    mostrarErro(texto);
   }
   atualizarQuadra();
 }
-
-// Implementação temporária com o mesmo contrato de fisica.js, sem resistência do ar.
-const fisicaDemonstracao = {
-  calcularArremesso(distancia, alturaSaida, anguloGraus) {
-    const angulo = anguloGraus * Math.PI / 180;
-    const coseno = Math.cos(angulo);
-    const denominador = 2 * coseno ** 2 * (alturaSaida + distancia * Math.tan(angulo) - ALTURA_ARO);
-    if (denominador <= 0) return null;
-    const velocidade2 = GRAVIDADE * distancia ** 2 / denominador;
-    if (!Number.isFinite(velocidade2) || velocidade2 <= 0) return null;
-    const velocidade = Math.sqrt(velocidade2);
-    return { velocidade, tempoAteAro: distancia / (velocidade * coseno) };
-  },
-  posicaoDaBola(tempo, alturaSaida, anguloGraus, velocidade) {
-    const angulo = anguloGraus * Math.PI / 180;
-    return {
-      x: velocidade * Math.cos(angulo) * tempo,
-      y: alturaSaida + velocidade * Math.sin(angulo) * tempo - 0.5 * GRAVIDADE * tempo ** 2,
-    };
-  },
-};
-
-// Permite interagir imediatamente enquanto o import dinâmico é resolvido.
-motor = fisicaDemonstracao;
 
 function lerEntradas() {
   const distancia = campoDistancia.valueAsNumber;
@@ -127,6 +100,11 @@ function calcular() {
   if (entradas.erro) {
     pararAnimacao();
     mostrarErro(entradas.erro);
+    return;
+  }
+
+  if (!motor) {
+    mostrarErro(estadoMotor.textContent);
     return;
   }
 

@@ -1,12 +1,12 @@
-const gravidade = 9.81;
-const altura_aro = 3.05;
+const GRAVIDADE = 9.81;
+const ALTURA_ARO = 3.05;
 
-function ConverterParaRadiano(anguloGraus) {
+function converterParaRadiano(anguloGraus) {
     return anguloGraus * (Math.PI / 180);
 }
 
-export function calcularArremesso(distancia, altura, saida) {
-        if (
+export function calcularArremesso(distancia, alturaSaida, anguloGraus) {
+    if (
         !Number.isFinite(distancia) ||
         !Number.isFinite(alturaSaida) ||
         !Number.isFinite(anguloGraus) ||
@@ -18,7 +18,7 @@ export function calcularArremesso(distancia, altura, saida) {
         return null;
     }
 
-    const anguloRad = ConverterParaRadiano(anguloGraus);
+    const anguloRad = converterParaRadiano(anguloGraus);
     const seno = Math.sin(anguloRad);
     const cosseno = Math.cos(anguloRad);
 
