@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102333">
+  <title>Simulador de Arremesso</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <main class="pagina">
+    <header class="cabecalho">
+      <div class="marca" aria-hidden="true"><span>🏀</span></div>
+      <div>
+        <p class="sobretitulo">FÍSICA EM QUADRA</p>
+        <h1>Simulador de Arremesso</h1>
+        <p class="pergunta">Dá para programar um arremesso perfeito?</p>
+      </div>
+    </header>
+
+    <section class="visualizacao" aria-label="Quadra e trajetória do arremesso">
+      <div class="visualizacao-titulo">
+        <div>
+          <p class="sobretitulo">VISTA LATERAL</p>
+          <h2>Quadra arcade</h2>
+        </div>
+        <div class="placar"><span>CESTAS <b id="cestas">0</b></span><span>TENTATIVAS <b id="tentativas">0</b></span></div>
+      </div>
+      <p id="jogada" role="status">PRONTO</p>
+      <canvas id="quadra" aria-label="Animação da bola em uma quadra de basquete vista de lado">
+        Seu navegador não consegue exibir a quadra.
+      </canvas>
+      <div class="legenda"><span class="legenda-bola"></span> Bola <span class="legenda-rastro"></span> Trajetória</div>
+      <p class="dica">Use A/D, as setas ou os botões para andar. Pare para arremessar.</p>
+      <div class="direcoes">
+        <button type="button" class="botao botao-secundario" data-direcao="-1" aria-label="Andar para a esquerda">←</button>
+        <button type="button" class="botao botao-secundario" data-direcao="1" aria-label="Andar para a direita">→</button>
+      </div>
+    </section>
+
+    <section class="painel" hidden aria-label="Controles do arremesso">
+      <div class="painel-topo">
+        <div>
+          <p class="sobretitulo">MONTE SEU ARREMESSO</p>
+          <h2>Escolha os parâmetros</h2>
+        </div>
+        <output id="inclinacao" aria-label="Inclinação do arremesso"></output>
+      </div>
+
+      <form id="controles" novalidate>
+        <div class="campos">
+          <label for="distancia">Distância até o aro (m)
+            <input id="distancia" name="distancia" type="number" min="0.01" step="any" value="4" inputmode="decimal" required>
+          </label>
+          <label for="altura">Altura de saída (m)
+            <input id="altura" name="altura" type="number" min="0.01" step="any" value="2" inputmode="decimal" required>
+          </label>
+          <label for="angulo">Ângulo (graus)
+            <input id="angulo" name="angulo" type="number" min="0.01" max="89.99" step="any" value="50" inputmode="decimal" required>
+          </label>
+        </div>
+        <div class="acoes">
+          <button class="botao botao-principal" type="submit">Calcular e arremessar</button>
+          <button class="botao botao-secundario" id="repetir" type="button" disabled>Repetir velocidade</button>
+          <button class="botao botao-texto" id="reiniciar" type="button">Reiniciar</button>
+        </div>
+      </form>
+
+      <p id="mensagem" class="mensagem" role="status" aria-live="polite">Ajuste os valores e calcule um arremesso.</p>
+    </section>
+
+    <details class="matematica">
+      <summary>Ver matemática</summary>
+        <span id="estado-motor" class="selo-modo" data-modo="demo" role="status">Carregando física…</span>
+      <p>x(t) = v₀ cos(θ) t<br>y(t) = h₀ + v₀ sen(θ) t − gt²/2</p>
+      <p id="dados-jogada">Aguardando o primeiro lançamento.</p>
+      <div class="leituras">
+      <article class="leitura"><span>Velocidade inicial</span><strong id="velocidade">—</strong></article>
+      <article class="leitura"><span>Tempo até o plano do aro</span><strong id="tempo">—</strong></article>
+      <article class="leitura leitura-resultado"><span>Resultado</span><strong id="resultado">Aguardando o arremesso.</strong></article>
+      </div>
+    </details>
+
+    <footer>Modelo de lançamento em duas dimensões · origem na bola · gravidade 9,81 m/s²</footer>
+  </main>
+</body>
+</html>
